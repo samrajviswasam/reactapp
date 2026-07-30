@@ -8,15 +8,17 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
-                checkout scm
+                sh '''
+                git clone https://github.com/samrajviswasam/reactapp.git
+                '''
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                dir('react-app') {
+                dir('reactapp') {
                     sh 'docker build -t $IMAGE_NAME .'
                 }
             }
@@ -32,9 +34,9 @@ pipeline {
             steps {
                 sh '''
                 docker run -d \
-                --name react-container \
-                -p 3000:80 \
-                react-app
+                    --name react-container \
+                    -p 3000:80 \
+                    react-app
                 '''
             }
         }
