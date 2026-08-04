@@ -3,7 +3,7 @@ name: React App CI/CD (Self-Hosted)
 on:
   push:
     branches:
-      - master
+      - master 
 
 jobs:
   deploy:
