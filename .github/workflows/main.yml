@@ -9,7 +9,7 @@ jobs:
   deploy:
     runs-on: self-hosted
 
-    steps:
+    steps: 
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
