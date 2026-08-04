@@ -1,17 +1,24 @@
-name: React App CI/CD (Self-Hosted)
+name: React CI/CD - Self Hosted
 
 on:
   push:
     branches:
       - master
- 
-jobs: 
-  deploy:
-    runs-on: self-hosted
+      - main
 
-    steps: 
-      - name: Checkout Source Code
+jobs:
+  deploy:
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+
+    steps:
+      - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Verify Docker
+        run: docker --version
 
       - name: Build Docker Image
         run: |
@@ -25,10 +32,21 @@ jobs:
         run: |
           docker rm react-container || true
 
-      - name: Run New Container
+      - name: Remove Old Image
+        run: |
+          docker image rm react-app:latest || true
+
+      - name: Build Fresh Docker Image
+        run: |
+          docker build -t react-app:latest .
+
+      - name: Run Container
         run: |
           docker run -d \
-          --name react-container \
-          -p 3000:80 \
-          --restart unless-stopped \
-          react-app:latest
+            --name react-container \
+            --restart unless-stopped \
+            -p 3000:80 \
+            react-app:latest
+
+      - name: Show Running Containers
+        run: docker ps
